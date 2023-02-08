@@ -10,7 +10,7 @@ function start(manifest, options) {
   const clientRoot = new URL("../client/", import.meta.url);
   const app = new App(manifest);
   const handler = async (request, connInfo) => {
-    var _a;
+    var _a, _b;
     if (app.match(request)) {
       let ip = (_a = connInfo == null ? void 0 : connInfo.remoteAddr) == null ? void 0 : _a.hostname;
       Reflect.set(request, Symbol.for("astro.clientAddress"), ip);
@@ -23,8 +23,8 @@ function start(manifest, options) {
       return response;
     }
     const url = new URL(request.url);
-    const localPath = new URL("./" + app.removeBase(url.pathname), clientRoot);
-    const fileResp = await fetch(localPath.toString());
+    const localPath = new URL("./" + app.removeBase(url.pathname), clientRoot).toString();
+    const fileResp = await fetch(localPath);
     if (fileResp.status == 404) {
       const response = await app.render(request);
       if (app.setCookieHeaders) {
@@ -34,8 +34,14 @@ function start(manifest, options) {
       }
       return response;
     } else {
-      if (options.staticCacheForSeconds) {
-        fileResp.headers.append("Cache-control", `public, max-age=${options.staticCacheForSeconds}, immutable`);
+      if (options.headerMap) {
+        const fileType = (_b = localPath.split(".").pop()) == null ? void 0 : _b.toLowerCase();
+        const headers = fileType && options.headerMap.get(fileType);
+        if (headers) {
+          for (const [name, val] of headers) {
+            fileResp.headers.append(name, val);
+          }
+        }
       }
       return fileResp;
     }
