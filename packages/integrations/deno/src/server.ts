@@ -10,6 +10,7 @@ interface Options {
 	port?: number;
 	hostname?: string;
 	start?: boolean;
+  staticCacheForSeconds?: number;
 }
 
 let _server: Server | undefined = undefined;
@@ -55,6 +56,9 @@ export function start(manifest: SSRManifest, options: Options) {
 
 			// If the static file is found
 		} else {
+      if (options.staticCacheForSeconds) {
+        fileResp.headers.append("Cache-control", `public, max-age=${options.staticCacheForSeconds}, immutable`); 
+      }
 			return fileResp;
 		}
 	};
