@@ -17,7 +17,6 @@ let _server: Server | undefined = undefined;
 let _startPromise: Promise<void> | undefined = undefined;
 
 export function start(manifest: SSRManifest, options: Options) {
-  console.log(`optionses: ${JSON.stringify(options)}`);
   if (options.start === false) {
     return;
   }
