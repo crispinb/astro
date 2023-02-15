@@ -3,7 +3,7 @@ interface Options {
     port?: number;
     hostname?: string;
     start?: boolean;
-    headerMap?: Map<string, [[string, string]]>;
+    headerMap?: Record<string, Array<[string, string]>>;
 }
 export declare function start(manifest: SSRManifest, options: Options): void;
 export declare function createExports(manifest: SSRManifest, options: Options): {

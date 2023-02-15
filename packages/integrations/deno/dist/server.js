@@ -4,6 +4,7 @@ import { fetch } from "https://deno.land/x/file_fetch/mod.ts";
 let _server = void 0;
 let _startPromise = void 0;
 function start(manifest, options) {
+  console.log(`optionses: ${JSON.stringify(options)}`);
   if (options.start === false) {
     return;
   }
@@ -36,7 +37,7 @@ function start(manifest, options) {
     } else {
       if (options.headerMap) {
         const fileType = (_b = localPath.split(".").pop()) == null ? void 0 : _b.toLowerCase();
-        const headers = fileType && options.headerMap.get(fileType);
+        const headers = fileType && options.headerMap[fileType];
         if (headers) {
           for (const [name, val] of headers) {
             fileResp.headers.append(name, val);
