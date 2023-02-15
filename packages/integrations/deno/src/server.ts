@@ -10,14 +10,14 @@ interface Options {
   port?: number;
   hostname?: string;
   start?: boolean;
-  // map of lower case file extension to array of header name & value tuples
-  headerMap?: Map<string, [[string, string]]>
+  headerMap?: Record<string, Array<[string,string]>>;
 }
 
 let _server: Server | undefined = undefined;
 let _startPromise: Promise<void> | undefined = undefined;
 
 export function start(manifest: SSRManifest, options: Options) {
+  console.log(`optionses: ${JSON.stringify(options)}`);
   if (options.start === false) {
     return;
   }
@@ -59,7 +59,7 @@ export function start(manifest: SSRManifest, options: Options) {
     } else {
       if (options.headerMap) {
         const fileType = localPath.split('.').pop()?.toLowerCase();
-        const headers = fileType && options.headerMap.get(fileType);
+        const headers = fileType && options.headerMap[fileType];
         if (headers) {
           for (const [name, val] of headers) {
             fileResp.headers.append(name, val);

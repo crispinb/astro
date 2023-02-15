@@ -13,6 +13,7 @@ interface BuildConfig {
 interface Options {
 	port?: number;
 	hostname?: string;
+  headerMap?: Record<string, Array<[string,string]>>;
 }
 
 const SHIM = `globalThis.process = {
